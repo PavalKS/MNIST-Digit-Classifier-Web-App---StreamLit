@@ -15,7 +15,7 @@ This is a Streamlit web application that serves as an MNIST digit classifier usi
 ### 1. Clone the repository:
 
    ```
-   git clone https://github.com/your-username/mnist-digit-classifier.git
+   git clone https://github.com/PavalKS/mnist-digit-classifier.git
    cd mnist-digit-classifier
    ```
 
