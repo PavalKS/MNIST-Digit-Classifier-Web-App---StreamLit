@@ -58,7 +58,7 @@ By splitting the code, you can save time when running the Streamlit app as you w
 <img width="432" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/7ef10fd3-662e-4460-80e5-3dc76b6d30ad">
 <img width="417" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/68581524-cf76-46c7-b528-d60ac4ffe351">
 <img width="276" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/19ce2bf2-aa88-489a-a12d-1160f24b08b1">
-<img width="411" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/9e424121-7676-4305-b4ce-1add5b894fcc">
+<img width="494" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/706ca69e-b86d-4886-8b3c-451b125e4aa9">
 <img width="413" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/1196fd2f-caae-47e4-a0f4-9aacdbc1a5da">
 <img width="412" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/26a41b22-d935-4050-8aff-1ec79b76531b">
 <img width="412" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/425d49ad-0a34-4af1-a835-54950cb548ec">
