@@ -10,7 +10,7 @@ This is a Streamlit web application that serves as an MNIST digit classifier usi
 - Visualize training statistics, including epoch, training loss, validation accuracy, validation loss, and duration.
 - Learn how the neural network works and is trained.
 
-[![Watch the video](https://img.youtube.com/vi/your_video_id/0.jpg)](https://www.youtube.com/watch?v=your_video_id)
+[![Watch the video](https://img.youtube.com/vi/gowdSkoWc8E/0.jpg)](https://www.youtube.com/watch?v=gowdSkoWc8E)
 
 ## Installation
 
