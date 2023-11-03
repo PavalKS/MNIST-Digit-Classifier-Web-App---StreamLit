@@ -17,6 +17,7 @@ from matplotlib.animation import FuncAnimation
 
 # Load MNIST dataset
 st.title("MNIST Digit Classifier")
+st.write("Authored by Paval KS - pavalsudhakar@gmail.com")
 mnist = fetch_openml('mnist_784', as_frame=False, cache=False)
 
 # Explanation of the working of the neural network
