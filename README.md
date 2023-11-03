@@ -43,3 +43,10 @@ Open your web browser and navigate to the provided URL to use the application.
 - PyTorch
 - scikit-learn
 - Matplotlib
+
+
+## Code Split for Efficiency
+If you want to improve efficiency or have separate stages for model training and model usage in your Streamlit app, consider splitting the code into two parts:
+1. **Model Training**: Create a dedicated Python script for training your neural network model. Save the trained model to a file (e.g., `mnist_classifier.pth`).
+2. **Streamlit App**: Develop another Python script that loads the pretrained model and integrates it into the Streamlit app for digit classification.
+By splitting the code, you can save time when running the Streamlit app as you won't need to train the model every time you use it. This separation also facilitates a more efficient workflow for model development and web application deployment.
