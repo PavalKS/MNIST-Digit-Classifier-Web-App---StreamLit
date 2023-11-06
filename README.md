@@ -1,12 +1,11 @@
 # MNIST-Digit-Classifier-Web-App---StreamLit
 This repository contains a Streamlit web application that serves as an MNIST digit classifier using a trained neural network. Users can upload images for classification, view training statistics, and understand the working of the neural network.
-
 This is a Streamlit web application that serves as an MNIST digit classifier using a trained neural network. The application allows users to either upload images for classification or draw digits on a canvas. It also provides insights into the working of the neural network and training statistics.
 
-## Features
+The Streamlit web app can either be run as a single, long webpage, or a webpage with three different navigatable pages. The code and demo videos have been provided for both variations. 
 
+## Features
 - Upload a handwritten digit image for classification.
-- Draw digits on a canvas and classify them.
 - Visualize training statistics, including epoch, training loss, validation accuracy, validation loss, and duration.
 - Learn how the neural network works and is trained.
 - Customise parameters (Number of training images, Activation Function, Number of hidden neurons, Usage of Dropout, Learning Rate, Optimizer) to see how the accuracy changes
@@ -54,6 +53,9 @@ By splitting the code, you can save time when running the Streamlit app as you w
 
 
 ## Here's what it looks like:
+The page with navigation contains three different pages as shown below, the other contents remain the same:
+<img width="960" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/43a8d8e8-14ae-47a6-a3d2-3bf4ffdbb406">
+
 <img width="456" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/513964bf-ecd2-447a-9214-5cb2b3427cb4">
 <img width="423" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/848bc5a4-3d0a-4267-994b-e732a40c28df">
 <img width="432" alt="image" src="https://github.com/PavalKS/MNIST-Digit-Classifier-Web-App---StreamLit/assets/74084308/7ef10fd3-662e-4460-80e5-3dc76b6d30ad">
