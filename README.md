@@ -29,6 +29,10 @@ The Streamlit web app can either be run as a single, long webpage, or a webpage 
   ```
   streamlit run app.py
   ```
+or
+```
+streamlit run multipage_app.py
+```
 
 Open your web browser and navigate to the provided URL to use the application.
 
