@@ -9,6 +9,7 @@ This is a Streamlit web application that serves as an MNIST digit classifier usi
 - Draw digits on a canvas and classify them.
 - Visualize training statistics, including epoch, training loss, validation accuracy, validation loss, and duration.
 - Learn how the neural network works and is trained.
+- Customise parameters (Number of training images, Activation Function, Number of hidden neurons, Usage of Dropout, Learning Rate, Optimizer) to see how the accuracy changes
 
 ## Installation
 
