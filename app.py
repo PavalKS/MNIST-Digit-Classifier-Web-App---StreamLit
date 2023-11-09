@@ -291,8 +291,8 @@ train_stats = None
 # Define the function to display training statistics
 @st.cache_data
 def display_training_statistics(_net):
-    if _net is not None:
-        train_stats = _net.history[:, ['epoch', 'train_loss', 'valid_acc', 'valid_loss', 'dur']]
+    if net is not None:
+        train_stats = net.history[:, ['epoch', 'train_loss', 'valid_acc', 'valid_loss', 'dur']]
         st.table(train_stats)
 
         # Plot the training statistics
@@ -315,8 +315,8 @@ if net is not None:
 # Define the function to calculate accuracy and display confusion matrix
 @st.cache_data
 def calculate_accuracy_and_display_confusion_matrix(_net, X_test, y_test):
-    if _net is not None:
-        y_pred = _net.predict(X_test)
+    if net is not None:
+        y_pred = net.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
 
         st.header("Accuracy")
