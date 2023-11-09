@@ -288,24 +288,31 @@ st.markdown("4. *Valid Loss:* Validation loss, the loss on the validation datase
 st.markdown("5. *Duration:* The time taken to complete each epoch.")
 train_stats = None
 
-# Define the function to display training statistics
-@st.cache_data
-def display_training_statistics(net):
-    if net is not None:
-        train_stats = net.history[:, ['epoch', 'train_loss', 'valid_acc', 'valid_loss', 'dur']]
-        st.table(train_stats)
+# Display training statistics in a table
+st.subheader("Training Statistics")
+st.markdown("1. *Epoch:* The number of times the model has been trained on the entire training dataset.")
+st.markdown("2. *Train Loss:* The training loss at the end of each epoch, indicating how well the model is fitting the training data.")
+st.markdown("3. *Valid Acc:* Validation accuracy, the accuracy of the model on the validation dataset at the end of each epoch.")
+st.markdown("4. *Valid Loss:* Validation loss, the loss on the validation dataset, measuring how well the model generalizes.")
+st.markdown("5. *Duration:* The time taken to complete each epoch.")
+train_stats = None
 
-        # Plot the training statistics
-        st.subheader("Training Statistics Plot")
-        fig, ax = plt.subplots(figsize=(10, 6))
-        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-        ax.plot(x, net.history[:, ['train_loss']], label='Train Loss')
-        ax.plot(x, net.history[:, ['valid_acc']], label='Valid Acc')
-        ax.plot(x, net.history[:, ['valid_loss']], label='Valid Loss')
-        ax.set_xlabel('Epoch')
-        ax.set_title('Training Statistics')
-        ax.legend()
-        st.pyplot(fig)
+# Define the function to display training statistics
+if net is not None:
+    train_stats = _net.history[:, ['epoch', 'train_loss', 'valid_acc', 'valid_loss', 'dur']]
+    st.table(train_stats)
+
+    # Plot the training statistics
+    st.subheader("Training Statistics Plot")
+    fig, ax = plt.subplots(figsize=(10, 6))
+    x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    ax.plot(x, _net.history[:, ['train_loss']], label='Train Loss')
+    ax.plot(x, _net.history[:, ['valid_acc']], label='Valid Acc')
+    ax.plot(x, _net.history[:, ['valid_loss']], label='Valid Loss')
+    ax.set_xlabel('Epoch')
+    ax.set_title('Training Statistics')
+    ax.legend()
+    st.pyplot(fig)
 
 
 y_pred = None
@@ -313,50 +320,42 @@ if net is not None:
     y_pred = net.predict(X_test)
 
 # Define the function to calculate accuracy and display confusion matrix
-@st.cache_data
-def calculate_accuracy_and_display_confusion_matrix(net, X_test, y_test):
-    if net is not None:
-        y_pred = net.predict(X_test)
-        accuracy = accuracy_score(y_test, y_pred)
+if _net is not None:
+    y_pred = _net.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
 
-        st.header("Accuracy")
-        st.write(f"Accuracy: {accuracy * 100:.2f}%")
-        st.write("Accuracy is the number of correctly predicted data points out of all the data points.")
-        
-        # Display the confusion matrix
-        st.subheader("Confusion Matrix")
-        st.markdown("The confusion matrix is a visualization of the model's performance on the test data. It shows how many data points were correctly predicted and how many were misclassified.")
-        st.markdown("Each row of the matrix represents the actual class (true label), and each column represents the predicted class by the model.")
-        st.markdown("Here's what the confusion matrix elements mean:")
-        st.markdown("- True Positives (TP): The number of data points that were correctly predicted as positive.")
-        st.markdown("- True Negatives (TN): The number of data points that were correctly predicted as negative.")
-        st.markdown("- False Positives (FP): The number of data points that were incorrectly predicted as positive (false alarms).")
-        st.markdown("- False Negatives (FN): The number of data points that were incorrectly predicted as negative (misses).")
-        st.markdown("The diagonal elements (top-left to bottom-right) represent correct predictions (TP and TN), while off-diagonal elements represent misclassifications (FP and FN).")
-        cm = confusion_matrix(y_test, y_pred)
-        fig, ax = plt.subplots(figsize=(8, 6))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-        ax.set_xlabel('Predicted')
-        ax.set_ylabel('True')
-        st.pyplot(fig)
+    st.divider()
+    st.header("Accuracy")
+    st.write(f"Accuracy: {accuracy * 100:.2f}%")
+    st.write("Accuracy is the number of correctly predicted data points out of all the data points.")
+    st.divider()
+    
+    # Display the confusion matrix
+    st.subheader("Confusion Matrix")
+    st.markdown("The confusion matrix is a visualization of the model's performance on the test data. It shows how many data points were correctly predicted and how many were misclassified.")
+    st.markdown("Each row of the matrix represents the actual class (true label), and each column represents the predicted class by the model.")
+    st.markdown("Here's what the confusion matrix elements mean:")
+    st.markdown("- True Positives (TP): The number of data points that were correctly predicted as positive.")
+    st.markdown("- True Negatives (TN): The number of data points that were correctly predicted as negative.")
+    st.markdown("- False Positives (FP): The number of data points that were incorrectly predicted as positive (false alarms).")
+    st.markdown("- False Negatives (FN): The number of data points that were incorrectly predicted as negative (misses).")
+    st.markdown("The diagonal elements (top-left to bottom-right) represent correct predictions (TP and TN), while off-diagonal elements represent misclassifications (FP and FN).")
+    cm = confusion_matrix(y_test, y_pred)
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    ax.set_xlabel('Predicted')
+    ax.set_ylabel('True')
+    st.pyplot(fig)
 
 # Define the function to visualize misclassified images
-@st.cache_data
 def visualize_misclassified_images(X_test, y_pred, y_test):
     error_mask = y_pred != y_test
     st.write("Misclassified Images")
     plot_example(X_test[error_mask], y_pred[error_mask])
 
-# Display training statistics
-display_training_statistics(net)
-
-# Calculate accuracy and display confusion matrix
-calculate_accuracy_and_display_confusion_matrix(net, X_test, y_test)
-
 # Visualize misclassified images
 if y_pred is not None:
     visualize_misclassified_images(X_test, y_pred, y_test)
-
 # Preprocess and predict
 if net is not None:
     if uploaded_image is not None:
