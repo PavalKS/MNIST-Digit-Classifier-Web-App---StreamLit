@@ -350,7 +350,7 @@ if net is not None:
 # Define the function to visualize misclassified images
 def visualize_misclassified_images(X_test, y_pred, y_test):
     error_mask = y_pred != y_test
-    st.write("Misclassified Images")
+    st.subheader("Misclassified Images")
     plot_example(X_test[error_mask], y_pred[error_mask])
 
 # Visualize misclassified images
