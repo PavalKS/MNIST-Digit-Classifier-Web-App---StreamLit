@@ -8,3 +8,4 @@ skorch==0.10.0
 Pillow==8.2.0
 seaborn==0.11.1
 streamlit-drawable-canvas==0.9.3
+torchvision==0.9.1
