@@ -19,7 +19,8 @@ import seaborn as sns
 
 st.title("MNIST Digit Classifier")
 st.write("Authored by PAVAL KS - pavalsudhakar@gmail.com")
-st.divider()
+
+trained_model = None
 
 st.subheader("What is Machine Learning?")
 st.write("Imagine you have a computer and you have to teach it to recognize and understand handwritten numbers. If someone writes a number, like '7,' on a piece of paper, this computer can figure out that it's the number 7. How does it do that? That's where machine learning comes in.")
@@ -31,7 +32,6 @@ st.image('ml1.png')
 st.write("4. **Making Predictions:** Now, when we show the computer a new, unseen piece of paper with a handwritten number, it can make a guess. It looks for the patterns it learned during its training and says, **Hmm, I think this looks like a 7.**")
 st.write("5. **Feedback and Improvement:** Sometimes, the computer might make a mistake, and that's okay. We can tell it whether it's right or wrong. If it's wrong, the computer can adjust its understanding and get better over time. It learns from its mistakes, just like you do in school.")
 st.write("So, machine learning is like teaching a computer how to recognize patterns in data, in this case, patterns in handwritten numbers. It's a bit like teaching a dog tricks or teaching a friend how to play a new game. The more examples it sees, the better it gets at making predictions. The MNIST handwritten digit recognition model is like our computer, and it's really good at recognizing handwritten numbers because it has seen thousands of examples and learned the patterns. Machine learning is used in many other cool ways too, like helping with medical diagnoses, recommending movies, and even self-driving cars!")
-st.divider()
 
 st.subheader(" Let's connect the explanation of machine learning with these additional technical concepts:")
 st.write("- **Dataset:** Our collection of pieces of paper with handwritten numbers is our dataset. It's like having a big pile of homework for our computer to learn from.")
@@ -46,7 +46,6 @@ st.write("- **Learning Rate:** Learning rate is like the speed at which our comp
 st.write("- **Activation Function:** Inside our computer, there are small parts called neurons. Activation functions are like rules that help these neurons decide how excited or calm they should be. They help our pen make better predictions.")
 st.write("- **Hidden Neurons:** Our computer doesn't just have one neuron; it has many hidden ones. These hidden neurons work together to recognize the patterns in numbers. Think of them as a team of experts who combine their knowledge to solve a tough problem.")
 st.write("So, machine learning is like training our computer (the model) using a dataset of handwritten numbers, dividing it into training and test sets, teaching it to recognize patterns during training, testing its ability with new examples, evaluating its performance using metrics like accuracy, and making it smarter with optimization techniques like learning rate and activation functions, all while using hidden neurons to work together. Just like students in school learn from their teachers and tests, our computer learns from its dataset and tests to become really good at recognizing numbers.")
-st.divider()
 
 st.subheader("Here's a simplified explanation of how a neural network works:")
 st.write("Neural networks are a type of computer program that's inspired by the way our brains work. They're used for a wide range of tasks, including things like recognizing handwritten digits in the MNIST dataset, which is a common example in the field of machine learning.")
@@ -85,7 +84,6 @@ st.write("The neural network is trained on the MNIST dataset, which consists of 
 st.write("The neural network uses one hidden layer with 98 neurons and an output layer with 10 neurons, each representing a digit.")
 st.write("The images are preprocessed to ensure consistency with the training data.")
 st.write("The model is trained using the training data, and accuracy is measured on the test data.")
-st.divider()
 
 # Function to preprocess a canvas drawing
 def preprocess_canvas_drawing(uploaded_canvas):
@@ -193,7 +191,6 @@ use_dropout = True
 learning_rate = 0.1
 optimizer = "SGD"
 
-st.divider()
 # Display interactive elements with default values
 st.subheader("Let's train the computer to recognise numbers as we discussed earlier")
 st.write("modify the parameters below and see how it affects the computer's ability to recognise numbers! (Accuracy)")
@@ -251,7 +248,7 @@ class CustomClassifierModule(nn.Module):
         X = F.softmax(self.output(X), dim=-1)
         return X
 
-@st.cache_data
+
 # Define the function to train the model
 def train_model():
     # Use the values from interactive elements or defaults
@@ -269,6 +266,7 @@ def train_model():
         device=device,
     )
     net.fit(X_train_subset, y_train_subset)
+    trained_model = net
     return net
 
 
@@ -277,12 +275,10 @@ if st.button("Train Model"):
 else:
     net = None
 
-st.divider()
 # Display a selection of training images and their labels
 st.header("Sample of Training Images and Labels")
 plot_example(X_train, y_train)
 
-st.divider()
 # Display training statistics in a table
 st.subheader("Training Statistics")
 st.markdown("1. *Epoch:* The number of times the model has been trained on the entire training dataset.")
@@ -312,7 +308,10 @@ def display_training_statistics(_net):
         st.pyplot(fig)
 
 
-y_pred = net.predict(X_test)
+y_pred = None
+if net is not None:
+    y_pred = net.predict(X_test)
+
 # Define the function to calculate accuracy and display confusion matrix
 @st.cache_data
 def calculate_accuracy_and_display_confusion_matrix(_net, X_test, y_test):
@@ -320,11 +319,9 @@ def calculate_accuracy_and_display_confusion_matrix(_net, X_test, y_test):
         y_pred = _net.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
 
-        st.divider()
         st.header("Accuracy")
         st.write(f"Accuracy: {accuracy * 100:.2f}%")
         st.write("Accuracy is the number of correctly predicted data points out of all the data points.")
-        st.divider()
         
         # Display the confusion matrix
         st.subheader("Confusion Matrix")
@@ -357,39 +354,40 @@ display_training_statistics(net)
 calculate_accuracy_and_display_confusion_matrix(net, X_test, y_test)
 
 # Visualize misclassified images
-visualize_misclassified_images(X_test, y_pred, y_test)
+if y_pred is not None:
+    visualize_misclassified_images(X_test, y_pred, y_test)
 
 # Preprocess and predict
-if uploaded_image is not None:
-    image = Image.open(uploaded_image)
-    st.image(image, caption="Uploaded Image", use_column_width=True)
-    
-    # Preprocess and predict
-    image = image.convert("L")  # Convert to grayscale
-    image = image.resize((28, 28))  # Resize to MNIST size
-    image = transforms.ToTensor()(image)
-    image = 1 - image  # Invert black and white
-    image = image.view(1, -1)  # Reshape the image to (1, 784)
-    
-    # Ensure the input data matches the model's architecture
-    prediction = net.predict(image)
-    st.subheader("Predicted Output")
-    st.header(f"The model predicts that the digit is: {prediction[0]}")
-st.divider()
-
-if uploaded_canvas is not None:
-    image = Image.open("canvas_img.jpg")
-    st.image(image, caption="Uploaded Image", use_column_width=True)
-    
-    # Preprocess and predict
-    image = image.convert("L")  # Convert to grayscale
-    image = image.resize((28, 28))  # Resize to MNIST size
-    image = transforms.ToTensor()(image)
-    image = 1 - image  # Invert black and white
-    image = image.view(1, -1)  # Reshape the image to (1, 784)
-    
-    # Ensure the input data matches the model's architecture
-    prediction = net.predict(image)
-    st.subheader("Predicted Output")
-    st.header(f"The model predicts that the digit is: {prediction[0]}")
-st.divider()
+if net is not None:
+    if uploaded_image is not None:
+        image = Image.open(uploaded_image)
+        st.image(image, caption="Uploaded Image", use_column_width=True)
+        
+        # Preprocess and predict
+        image = image.convert("L")  # Convert to grayscale
+        image = image.resize((28, 28))  # Resize to MNIST size
+        image = transforms.ToTensor()(image)
+        image = 1 - image  # Invert black and white
+        image = image.view(1, -1)  # Reshape the image to (1, 784)
+        
+        # Ensure the input data matches the model's architecture
+        prediction = net.predict(image)
+        st.subheader("Predicted Output")
+        st.header(f"The model predicts that the digit is: {prediction[0]}")
+    elif uploaded_canvas is not None:
+        image = Image.open("canvas_img.jpg")
+        st.image(image, caption="Uploaded Image", use_column_width=True)
+        # Preprocess and predict
+        image = image.convert("L")  # Convert to grayscale
+        image = image.resize((28, 28))  # Resize to MNIST size
+        image = transforms.ToTensor()(image)
+        image = 1 - image  # Invert black and white
+        image = image.view(1, -1)  # Reshape the image to (1, 784)
+        # Ensure the input data matches the model's architecture
+        prediction = net.predict(image)
+        st.subheader("Predicted Output")
+        st.header(f"The model predicts that the digit is: {prediction[0]}")
+    else:
+        st.write("Please upload or draw an image of a number to predict")
+else:
+    st.write("Please train the model to get predictions")
