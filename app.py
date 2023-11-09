@@ -290,7 +290,7 @@ train_stats = None
 
 # Define the function to display training statistics
 @st.cache_data
-def display_training_statistics(_net):
+def display_training_statistics(net):
     if net is not None:
         train_stats = net.history[:, ['epoch', 'train_loss', 'valid_acc', 'valid_loss', 'dur']]
         st.table(train_stats)
@@ -299,9 +299,9 @@ def display_training_statistics(_net):
         st.subheader("Training Statistics Plot")
         fig, ax = plt.subplots(figsize=(10, 6))
         x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-        ax.plot(x, _net.history[:, ['train_loss']], label='Train Loss')
-        ax.plot(x, _net.history[:, ['valid_acc']], label='Valid Acc')
-        ax.plot(x, _net.history[:, ['valid_loss']], label='Valid Loss')
+        ax.plot(x, net.history[:, ['train_loss']], label='Train Loss')
+        ax.plot(x, net.history[:, ['valid_acc']], label='Valid Acc')
+        ax.plot(x, net.history[:, ['valid_loss']], label='Valid Loss')
         ax.set_xlabel('Epoch')
         ax.set_title('Training Statistics')
         ax.legend()
@@ -314,7 +314,7 @@ if net is not None:
 
 # Define the function to calculate accuracy and display confusion matrix
 @st.cache_data
-def calculate_accuracy_and_display_confusion_matrix(_net, X_test, y_test):
+def calculate_accuracy_and_display_confusion_matrix(net, X_test, y_test):
     if net is not None:
         y_pred = net.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
