@@ -288,15 +288,6 @@ st.markdown("4. *Valid Loss:* Validation loss, the loss on the validation datase
 st.markdown("5. *Duration:* The time taken to complete each epoch.")
 train_stats = None
 
-# Display training statistics in a table
-st.subheader("Training Statistics")
-st.markdown("1. *Epoch:* The number of times the model has been trained on the entire training dataset.")
-st.markdown("2. *Train Loss:* The training loss at the end of each epoch, indicating how well the model is fitting the training data.")
-st.markdown("3. *Valid Acc:* Validation accuracy, the accuracy of the model on the validation dataset at the end of each epoch.")
-st.markdown("4. *Valid Loss:* Validation loss, the loss on the validation dataset, measuring how well the model generalizes.")
-st.markdown("5. *Duration:* The time taken to complete each epoch.")
-train_stats = None
-
 # Define the function to display training statistics
 if net is not None:
     train_stats = net.history[:, ['epoch', 'train_loss', 'valid_acc', 'valid_loss', 'dur']]
@@ -372,7 +363,7 @@ if net is not None:
         # Ensure the input data matches the model's architecture
         prediction = net.predict(image)
         st.subheader("Predicted Output")
-        st.header(f"The model predicts that the digit is: {prediction[0]}")
+        st.header(f"The model predicts that the digit you gave it is: {prediction[0]}")
     elif uploaded_canvas is not None:
         image = Image.open("canvas_img.jpg")
         st.image(image, caption="Uploaded Image", use_column_width=True)
