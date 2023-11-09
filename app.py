@@ -357,6 +357,8 @@ def visualize_misclassified_images(X_test, y_pred, y_test):
 if y_pred is not None:
     visualize_misclassified_images(X_test, y_pred, y_test)
 # Preprocess and predict
+
+st.subheader("Now that the model is trained, Let's make the model recognize the handwritten digit you gave it in the beginning!")
 if net is not None:
     if uploaded_image is not None:
         image = Image.open(uploaded_image)
