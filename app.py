@@ -142,7 +142,7 @@ elif uploaded_canvas is not None:
     image_data = preprocess_canvas_drawing(uploaded_canvas)
 
 
-@st.cache_data
+#@st.cache_data
 # Load MNIST dataset with caching
 def load_mnist_data():
     mnist = fetch_openml('mnist_784', as_frame=False, cache=False)
