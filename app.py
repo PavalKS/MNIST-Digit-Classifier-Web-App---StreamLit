@@ -224,7 +224,16 @@ st.subheader("Things to be cautious about while training a neural network:")
 st.write("- Underfitting: Imagine you have a friend who's learning to play basketball. This friend is so cautious that they never take a shot at the basket. They don't practice much and always play it safe. As a result, they rarely make any baskets because they are too scared to try. In the world of machine learning, this is like underfitting. It happens when a model is too simple and can't understand the data properly. It's like not trying hard enough to learn, just like our cautious basketball player.")
 st.write(" - Overfitting: On the other hand, think of another friend who's practicing basketball. They try to make incredibly difficult shots all the time. They practice so much that they start to make shots even from the most challenging angles. However, when it comes to a real game, they can't perform well because they've only practiced those tricky shots. They're too specialized and can't adapt to the regular game. In machine learning, this is like overfitting. It happens when a model is too complex and learns the training data too well but struggles when faced with new, unseen data.")
 st.write(" So, underfitting is like not learning enough and being too simple, while overfitting is like learning too much from your training and being too specialized. The goal in machine learning is to find the right balance, just like becoming a good basketball player who can make both easy and challenging shots. This balance helps the model perform well not only on the training data but also on new data it hasn't seen before.")
+st.write("A machine learning algorithm is said to have underfitting when a model is too simple to capture data complexities. It represents the inability of the model to learn the training data effectively result in poor performance both on the training and testing data.")
+st.write("Possible reasons for underfitting:")
+st.write(" - The model is too simple, So it may be not capable to represent the complexities in the data.")
+st.write(" - The input features which is used to train the model is not the adequate")
+st.write(" - The size of the training dataset used is not enough.")
 
+st.write("A statistical model is said to be overfitted when the model does not make accurate predictions on testing data. When a model gets trained with so much data, it starts learning from the noise and inaccurate data entries in our data set.")
+st.write("Possible reasons for overfitting:")
+st.write(" - The model is too complex.")
+st.write(" - The size of the training data.")
 
 # Rebuild and retrain the model with updated settings
 class CustomClassifierModule(nn.Module):
