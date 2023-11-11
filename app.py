@@ -30,17 +30,17 @@ if 'uploaded_canvas' not in st.session_state:
 if 'trained_model' not in st.session_state:
     st.session_state.trained_model = None
 if 'num_train_images' not in st.session_state:
-    st.session_state.num_train_images = st.slider("Number of Training Images", min_value=100, max_value=52500, step=100, value=52500)
+    st.session_state.num_train_images = st.slider("Number of Training Images", key="num_train_images", min_value=100, max_value=52500, step=100, value=52500)
 if 'hidden_neurons' not in st.session_state:
-    st.session_state.hidden_neurons = st.slider("Number of Hidden Neurons", min_value=32, max_value=256, step=32, value=128)
+    st.session_state.hidden_neurons = st.slider("Number of Hidden Neurons", key="hidden_neurons", min_value=32, max_value=256, step=32, value=128)
 if 'activation_function' not in st.session_state:
-    st.session_state.activation_function = st.selectbox("Activation Function", ["ReLU", "Sigmoid", "Tanh"], index=0)
+    st.session_state.activation_function = st.selectbox("Activation Function", key="activation_function", options=["ReLU", "Sigmoid", "Tanh"], index=0)
 if 'use_dropout' not in st.session_state:
-    st.session_state.use_dropout = st.checkbox("Use Dropout", value=False)
+    st.session_state.use_dropout = st.checkbox("Use Dropout", key="use_dropout", value=False)
 if 'learning_rate' not in st.session_state:
-    st.session_state.learning_rate = st.slider("Learning Rate", min_value=0.001, max_value=1.0, step=0.01, value=0.01)
+    st.session_state.learning_rate = st.slider("Learning Rate", key="learning_rate", min_value=0.001, max_value=1.0, step=0.01, value=0.01)
 if 'optimizer' not in st.session_state:
-    st.session_state.optimizer = st.radio("Optimizer", ["SGD", "Adam", "RMSprop"], index=0)
+    st.session_state.optimizer = st.radio("Optimizer", key="optimizer", options=["SGD", "Adam", "RMSprop"], index=0)
     
 
 trained_model = None
