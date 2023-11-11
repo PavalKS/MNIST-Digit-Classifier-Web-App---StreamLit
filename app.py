@@ -10,7 +10,6 @@ from torch import nn
 import torch.nn.functional as F
 import cv2
 import torch.optim as optim
-from memory_profiler import profile
 from skorch import NeuralNetClassifier
 from PIL import Image
 import torchvision.transforms as transforms
