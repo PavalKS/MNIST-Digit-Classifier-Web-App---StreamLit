@@ -10,6 +10,7 @@ from torch import nn
 import torch.nn.functional as F
 import cv2
 import torch.optim as optim
+from memory_profiler import profile
 from skorch import NeuralNetClassifier
 from PIL import Image
 import torchvision.transforms as transforms
@@ -19,6 +20,29 @@ import seaborn as sns
 
 st.title("MNIST Digit Classifier")
 st.write("Authored by PAVAL KS - pavalsudhakar@gmail.com")
+
+# Initialize session state
+if 'trained_model' not in st.session_state:
+    st.session_state.trained_model = None
+if 'uploaded_image' not in st.session_state:
+    st.session_state.uploaded_image = None
+if 'uploaded_canvas' not in st.session_state:
+    st.session_state.uploaded_canvas = None
+if 'trained_model' not in st.session_state:
+    st.session_state.trained_model = None
+if 'num_train_images' not in st.session_state:
+    st.session_state.num_train_images = st.slider("Number of Training Images", min_value=100, max_value=52500, step=100, value=52500)
+if 'hidden_neurons' not in st.session_state:
+    st.session_state.hidden_neurons = st.slider("Number of Hidden Neurons", min_value=32, max_value=256, step=32, value=128)
+if 'activation_function' not in st.session_state:
+    st.session_state.activation_function = st.selectbox("Activation Function", ["ReLU", "Sigmoid", "Tanh"], index=0)
+if 'use_dropout' not in st.session_state:
+    st.session_state.use_dropout = st.checkbox("Use Dropout", value=False)
+if 'learning_rate' not in st.session_state:
+    st.session_state.learning_rate = st.slider("Learning Rate", min_value=0.001, max_value=1.0, step=0.01, value=0.01)
+if 'optimizer' not in st.session_state:
+    st.session_state.optimizer = st.radio("Optimizer", ["SGD", "Adam", "RMSprop"], index=0)
+    
 
 trained_model = None
 
@@ -122,10 +146,10 @@ st.write("First, upload or draw an image of a number you want the computer to re
 st.subheader("Image Upload or Hand-Draw")
 
 # Option to upload an image
-uploaded_image = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
+st.session_state.uploaded_image = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 
 # Option to hand-draw an image using st_canvas
-uploaded_canvas = st_canvas(
+st.session_state.uploaded_canvas = st_canvas(
     stroke_width=10,
     stroke_color="black",
     background_color="white",
@@ -136,13 +160,13 @@ uploaded_canvas = st_canvas(
 )
 
 # Check if an image was uploaded
-if uploaded_image is not None:
-    image_data = preprocess_image(uploaded_image)
-elif uploaded_canvas is not None:
-    image_data = preprocess_canvas_drawing(uploaded_canvas)
+if st.session_state.uploaded_image is not None:
+    image_data = preprocess_image(st.session_state.uploaded_image)
+elif st.session_state.uploaded_canvas is not None:
+    image_data = preprocess_canvas_drawing(st.session_state.uploaded_canvas)
 
 
-#@st.cache_data
+@st.cache_data
 # Load MNIST dataset with caching
 def load_mnist_data():
     mnist = fetch_openml('mnist_784', as_frame=False, cache=False)
@@ -195,28 +219,34 @@ optimizer = "SGD"
 st.subheader("Let's train the computer to recognise numbers as we discussed earlier")
 st.write("modify the parameters below and see how it affects the computer's ability to recognise numbers! (Accuracy)")
 st.write("**Number of Training images:** This slider allows you to select the number of training images used to train the neural network. You can vary the training set size to observe how it affects the model's performance. Increasing the number of training images may improve accuracy, while reducing it can lead to faster training but potentially lower accuracy.")
-num_train_images = st.slider("Number of Training Images", min_value=100, max_value=len(X_train), step=100, value=num_train_images)
+num_train_images = st.slider("Number of Training Images", min_value=100, max_value=len(X_train), step=100, value=st.session_state.num_train_images)
+st.session_state.num_train_images = num_train_images
 
 st.write("**Number of Hidden Neurons:** This slider lets you adjust the number of neurons (units) in the hidden layer of the neural network. The hidden layer is a critical component of the network. More neurons can potentially capture more complex patterns in the data, but it can also increase training time and require more data. Fewer neurons may lead to underfitting.")
-hidden_neurons = st.slider("Number of Hidden Neurons", min_value=32, max_value=256, step=32, value=hidden_neurons)
+hidden_neurons = st.slider("Number of Hidden Neurons", min_value=32, max_value=256, step=32, value=st.session_state.hidden_neurons)
+st.session_state.hidden_neurons = hidden_neurons
 
 st.write("**Activation Function:** You can choose the activation function used in the hidden layer of the neural network. The activation function defines the output of a neuron given its input. The three options are:")
 st.write("1. ReLU (Rectified Linear Unit): Commonly used for hidden layers. It introduces non-linearity.")
 st.write("2. Sigmoid: Suits binary classification problems well. It squashes the output between 0 and 1.")
 st.write("3. Tanh: Also known as hyperbolic tangent activation function. It outputs values between -1 and 1. It can be used for both binary and multiclass classification.")
-activation_function = st.selectbox("Activation Function", ["ReLU", "Sigmoid", "Tanh"], index=0 if activation_function == "ReLU" else 1 if activation_function == "Sigmoid" else 2)
+activation_function = st.selectbox("Activation Function", ["ReLU", "Sigmoid", "Tanh"], index=0 if st.session_state.activation_function == "ReLU" else 1 if st.session_state.activation_function == "Sigmoid" else 2)
+st.session_state.activation_function = activation_function
 
 st.write("**Using Dropout:** Dropout is a regularization technique that helps prevent overfitting. When this checkbox is selected, dropout is applied during training. Dropout randomly sets a fraction of the neurons' outputs to zero during each training step, which encourages the network to be more robust and generalize better.")
-use_dropout = st.checkbox("Use Dropout", value=use_dropout)
+use_dropout = st.checkbox("Use Dropout", value=st.session_state.use_dropout)
+st.session_state.use_dropout = use_dropout
 
 st.write("**Learning Rate:** Learning rate determines the step size in updating the model's parameters during training. You can adjust the learning rate to control how quickly or slowly the model learns. A smaller learning rate may lead to slower but more stable convergence, while a larger learning rate may lead to faster convergence but with the risk of overshooting the optimal solution.")
-learning_rate = st.slider("Learning Rate", min_value=0.001, max_value=1.0, step=0.01, value=learning_rate)
+learning_rate = st.slider("Learning Rate", min_value=0.001, max_value=1.0, step=0.01, value=st.session_state.learning_rate)
+st.session_state.learning_rate = learning_rate
 
 st.write("**Optimizer:** The optimizer is responsible for updating the model's parameters based on the calculated gradients during training. You can choose between different optimization algorithms:")
 st.write("1. Stochastic Gradient Descent (SGD): A basic optimization algorithm.")
 st.write("2. Adam: A popular optimization algorithm that adapts the learning rate during training.")
 st.write("3. RMSprop (Root Mean Square Propagation): An adaptive learning rate method that can help overcome some of the limitations of basic SGD.")
-optimizer = st.radio("Optimizer", ["SGD", "Adam", "RMSprop"], index=0 if optimizer == "SGD" else 1 if optimizer == "Adam" else 2)
+optimizer = st.radio("Optimizer", ["SGD", "Adam", "RMSprop"], index=0 if st.session_state.optimizer == "SGD" else 1 if st.session_state.optimizer == "Adam" else 2)
+st.session_state.optimizer = optimizer
 X_train_subset, y_train_subset = X_train[:num_train_images], y_train[:num_train_images]
 
 
@@ -224,16 +254,7 @@ st.subheader("Things to be cautious about while training a neural network:")
 st.write("- Underfitting: Imagine you have a friend who's learning to play basketball. This friend is so cautious that they never take a shot at the basket. They don't practice much and always play it safe. As a result, they rarely make any baskets because they are too scared to try. In the world of machine learning, this is like underfitting. It happens when a model is too simple and can't understand the data properly. It's like not trying hard enough to learn, just like our cautious basketball player.")
 st.write(" - Overfitting: On the other hand, think of another friend who's practicing basketball. They try to make incredibly difficult shots all the time. They practice so much that they start to make shots even from the most challenging angles. However, when it comes to a real game, they can't perform well because they've only practiced those tricky shots. They're too specialized and can't adapt to the regular game. In machine learning, this is like overfitting. It happens when a model is too complex and learns the training data too well but struggles when faced with new, unseen data.")
 st.write(" So, underfitting is like not learning enough and being too simple, while overfitting is like learning too much from your training and being too specialized. The goal in machine learning is to find the right balance, just like becoming a good basketball player who can make both easy and challenging shots. This balance helps the model perform well not only on the training data but also on new data it hasn't seen before.")
-st.write("A machine learning algorithm is said to have underfitting when a model is too simple to capture data complexities. It represents the inability of the model to learn the training data effectively result in poor performance both on the training and testing data.")
-st.write("Possible reasons for underfitting:")
-st.write(" - The model is too simple, So it may be not capable to represent the complexities in the data.")
-st.write(" - The input features which is used to train the model is not the adequate")
-st.write(" - The size of the training dataset used is not enough.")
 
-st.write("A statistical model is said to be overfitted when the model does not make accurate predictions on testing data. When a model gets trained with so much data, it starts learning from the noise and inaccurate data entries in our data set.")
-st.write("Possible reasons for overfitting:")
-st.write(" - The model is too complex.")
-st.write(" - The size of the training data.")
 
 # Rebuild and retrain the model with updated settings
 class CustomClassifierModule(nn.Module):
@@ -297,6 +318,15 @@ st.markdown("4. *Valid Loss:* Validation loss, the loss on the validation datase
 st.markdown("5. *Duration:* The time taken to complete each epoch.")
 train_stats = None
 
+# Display training statistics in a table
+st.subheader("Training Statistics")
+st.markdown("1. *Epoch:* The number of times the model has been trained on the entire training dataset.")
+st.markdown("2. *Train Loss:* The training loss at the end of each epoch, indicating how well the model is fitting the training data.")
+st.markdown("3. *Valid Acc:* Validation accuracy, the accuracy of the model on the validation dataset at the end of each epoch.")
+st.markdown("4. *Valid Loss:* Validation loss, the loss on the validation dataset, measuring how well the model generalizes.")
+st.markdown("5. *Duration:* The time taken to complete each epoch.")
+train_stats = None
+
 # Define the function to display training statistics
 if net is not None:
     train_stats = net.history[:, ['epoch', 'train_loss', 'valid_acc', 'valid_loss', 'dur']]
@@ -350,18 +380,16 @@ if net is not None:
 # Define the function to visualize misclassified images
 def visualize_misclassified_images(X_test, y_pred, y_test):
     error_mask = y_pred != y_test
-    st.subheader("Misclassified Images")
+    st.write("Misclassified Images")
     plot_example(X_test[error_mask], y_pred[error_mask])
 
 # Visualize misclassified images
 if y_pred is not None:
     visualize_misclassified_images(X_test, y_pred, y_test)
 # Preprocess and predict
-
-st.subheader("Now that the model is trained, Let's make the model recognize the handwritten digit you gave it in the beginning!")
 if net is not None:
-    if uploaded_image is not None:
-        image = Image.open(uploaded_image)
+    if st.session_state.uploaded_image is not None:
+        image = Image.open(st.session_state.uploaded_image)
         st.image(image, caption="Uploaded Image", use_column_width=True)
         
         # Preprocess and predict
@@ -374,8 +402,8 @@ if net is not None:
         # Ensure the input data matches the model's architecture
         prediction = net.predict(image)
         st.subheader("Predicted Output")
-        st.header(f"The model predicts that the digit you gave it is: {prediction[0]}")
-    elif uploaded_canvas is not None:
+        st.header(f"The model predicts that the digit is: {prediction[0]}")
+    elif st.session_state.uploaded_canvas is not None:
         image = Image.open("canvas_img.jpg")
         st.image(image, caption="Uploaded Image", use_column_width=True)
         # Preprocess and predict
